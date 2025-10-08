@@ -3,6 +3,18 @@ const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
 const navLinks = document.querySelectorAll('.nav-link');
 
+// Page loading animation
+window.addEventListener('load', () => {
+    document.body.classList.add('loaded');
+    
+    // Add fade-in animation to body
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+        document.body.style.transition = 'opacity 0.5s ease';
+        document.body.style.opacity = '1';
+    }, 100);
+});
+
 navToggle.addEventListener('click', () => {
     navMenu.classList.toggle('active');
     
@@ -169,11 +181,19 @@ if (contactForm) {
 }
 
 // Parallax effect for hero background
+let ticking = false;
 window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const heroBackground = document.querySelector('.hero-background');
-    if (heroBackground && scrolled < window.innerHeight) {
-        heroBackground.style.transform = `translateY(${scrolled * 0.5}px)`;
+    if (!ticking) {
+        window.requestAnimationFrame(() => {
+            const scrolled = window.pageYOffset;
+            const heroBackground = document.querySelector('.hero-background');
+            if (heroBackground && scrolled < window.innerHeight) {
+                heroBackground.style.transform = `translateY(${scrolled * 0.5}px) scale(${1 + scrolled * 0.0002})`;
+                heroBackground.style.opacity = 1 - (scrolled / window.innerHeight) * 0.5;
+            }
+            ticking = false;
+        });
+        ticking = true;
     }
 });
 
@@ -203,13 +223,32 @@ window.addEventListener('scroll', highlightNavLink);
 // Add hover effect to research cards
 const researchCards = document.querySelectorAll('.research-card');
 researchCards.forEach(card => {
-    card.addEventListener('mouseenter', function(e) {
+    card.addEventListener('mousemove', function(e) {
         const rect = this.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         
         this.style.setProperty('--mouse-x', `${x}px`);
         this.style.setProperty('--mouse-y', `${y}px`);
+    });
+    
+    // Add 3D tilt effect
+    card.addEventListener('mousemove', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = (y - centerY) / 20;
+        const rotateY = (centerX - x) / 20;
+        
+        this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-12px) scale(1.02)`;
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = '';
     });
 });
 
@@ -328,3 +367,200 @@ window.removeEventListener('scroll', highlightNavLink);
 window.addEventListener('scroll', throttledHighlight);
 
 console.log('LuminexLabs website loaded successfully! 🚀');
+
+// Magnetic effect for buttons
+const buttons = document.querySelectorAll('.btn');
+buttons.forEach(button => {
+    button.addEventListener('mousemove', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        this.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) scale(1.02)`;
+    });
+    
+    button.addEventListener('mouseleave', function() {
+        this.style.transform = '';
+    });
+});
+
+// Cursor follower effect
+const cursor = document.createElement('div');
+cursor.classList.add('cursor-follower');
+document.body.appendChild(cursor);
+
+const cursorDot = document.createElement('div');
+cursorDot.classList.add('cursor-dot');
+document.body.appendChild(cursorDot);
+
+let mouseX = 0, mouseY = 0;
+let cursorX = 0, cursorY = 0;
+
+// Only show custom cursor on non-mobile devices
+if (window.innerWidth > 768) {
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        cursorDot.style.left = e.clientX + 'px';
+        cursorDot.style.top = e.clientY + 'px';
+    });
+
+    function animateCursor() {
+        const dx = mouseX - cursorX;
+        const dy = mouseY - cursorY;
+        
+        cursorX += dx * 0.1;
+        cursorY += dy * 0.1;
+        
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // Enlarge cursor on hoverable elements
+    const hoverElements = document.querySelectorAll('a, button, .research-card, .btn');
+    hoverElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.style.width = '60px';
+            cursor.style.height = '60px';
+            cursor.style.borderColor = 'rgba(236, 72, 153, 0.8)';
+            cursor.style.backgroundColor = 'rgba(236, 72, 153, 0.1)';
+        });
+        
+        el.addEventListener('mouseleave', () => {
+            cursor.style.width = '40px';
+            cursor.style.height = '40px';
+            cursor.style.borderColor = 'rgba(99, 102, 241, 0.5)';
+            cursor.style.backgroundColor = 'transparent';
+        });
+    });
+} else {
+    // Hide custom cursor on mobile
+    cursor.style.display = 'none';
+    cursorDot.style.display = 'none';
+}
+
+// Add cursor styles dynamically
+const cursorStyle = document.createElement('style');
+cursorStyle.textContent = `
+    .cursor-follower {
+        position: fixed;
+        width: 40px;
+        height: 40px;
+        border: 2px solid rgba(99, 102, 241, 0.5);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+        mix-blend-mode: difference;
+    }
+    
+    .cursor-dot {
+        position: fixed;
+        width: 6px;
+        height: 6px;
+        background: var(--primary-color);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 10000;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.8);
+        transition: background 0.3s ease;
+    }
+    
+    @media (max-width: 768px) {
+        .cursor-follower,
+        .cursor-dot {
+            display: none !important;
+        }
+    }
+`;
+document.head.appendChild(cursorStyle);
+
+// Smooth reveal for sections
+const revealSections = document.querySelectorAll('section');
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+});
+
+revealSections.forEach(section => {
+    section.style.opacity = '0';
+    section.style.transform = 'translateY(30px)';
+    section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+    revealObserver.observe(section);
+});
+
+// Add particle effect to hero
+function createParticles() {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    
+    for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        particle.style.cssText = `
+            position: absolute;
+            width: ${Math.random() * 4 + 2}px;
+            height: ${Math.random() * 4 + 2}px;
+            background: rgba(99, 102, 241, ${Math.random() * 0.5 + 0.2});
+            border-radius: 50%;
+            left: ${Math.random() * 100}%;
+            top: ${Math.random() * 100}%;
+            animation: float-particle ${Math.random() * 20 + 10}s infinite ease-in-out;
+            animation-delay: ${Math.random() * 5}s;
+            pointer-events: none;
+        `;
+        hero.appendChild(particle);
+    }
+}
+createParticles();
+
+// Enhanced scroll progress indicator
+const progressBar = document.createElement('div');
+progressBar.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+    z-index: 10000;
+    transition: width 0.1s ease;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+`;
+document.body.appendChild(progressBar);
+
+window.addEventListener('scroll', () => {
+    const scrollPercent = (window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    progressBar.style.width = scrollPercent + '%';
+});
+
+// Add floating animation to stats on view
+const stats = document.querySelectorAll('.stat-item');
+stats.forEach((stat, index) => {
+    stat.style.animation = `fadeIn 0.8s ease ${index * 0.2}s both, float 3s ease-in-out ${index * 0.3}s infinite`;
+});
+
+// Intersection observer for enhanced animations
+const enhancedObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.animation = 'fadeIn 0.8s ease forwards, float 2s ease-in-out infinite';
+        }
+    });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.feature-item').forEach(item => {
+    enhancedObserver.observe(item);
+});
