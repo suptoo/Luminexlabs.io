@@ -1,317 +1,661 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="LuminexLabs - AI-powered healthcare research focusing on skin disease detection and Alzheimer's research">
-    <title>LuminexLabs - AI Healthcare Research</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>LumenAI Explainer | Interactive Skin Disease Detection AI</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="title" content="LumenAI Explainer - Interactive Skin Disease Detection AI">
+    <meta name="description" content="Explore how LumenAI uses explainable AI to detect skin diseases. Interactive visualization of the Multi-View Concept Bottleneck Model.">
+    <meta name="keywords" content="skin disease, AI, machine learning, explainable AI, dermoscopy, melanoma detection, LuminexLabs">
+    <meta name="author" content="LuminexLabs">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://luminexlabs.io/lumenai">
+    <meta property="og:title" content="LumenAI Explainer - Interactive Skin Disease Detection AI">
+    <meta property="og:description" content="Explore how LumenAI uses explainable AI to detect skin diseases with 96.7% accuracy.">
+    <meta property="og:image" content="https://luminexlabs.io/assets/og-image.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://luminexlabs.io/lumenai">
+    <meta property="twitter:title" content="LumenAI Explainer">
+    <meta property="twitter:description" content="Interactive visualization of AI skin disease detection">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
+    
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Tooltip Styles -->
+    <style>
+        .tooltip {
+            position: fixed;
+            background: rgba(26, 26, 36, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px 16px;
+            max-width: 280px;
+            z-index: 10000;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        .tooltip-title {
+            font-weight: 600;
+            color: #00d4ff;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        .tooltip-content {
+            color: #a1a1aa;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .header.scrolled {
+            background: rgba(10, 10, 15, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-        <div class="container nav-container">
-            <div class="logo">
-                <span class="logo-text">Luminex<span class="logo-accent">Labs</span></span>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">🔬</div>
+            <div class="logo-text">
+                <span class="lumen">LUMEN</span><span class="ai">AI</span>
             </div>
-            <div class="nav-toggle" id="navToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#research" class="nav-link">Research</a></li>
-                <li><a href="#supto" class="nav-link">Supto Package</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-            </ul>
+            <div class="logo-divider"></div>
+            <span class="logo-subtitle">Explainer</span>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-background"></div>
-        <div class="container hero-content">
-            <h1 class="hero-title animate-fade-in">
-                Pioneering AI in <span class="gradient-text typing-effect">Healthcare Research</span>
-            </h1>
-            <p class="hero-subtitle animate-fade-in-delay">
-                Building the future of medical AI with advanced research in skin disease detection and Alzheimer's diagnosis
-            </p>
-            <div class="hero-buttons animate-fade-in-delay-2">
-                <a href="#research" class="btn btn-primary">Explore Research</a>
-                <a href="#supto" class="btn btn-secondary">Supto Package</a>
-            </div>
-            <div class="hero-stats">
-                <div class="stat-item">
-                    <div class="stat-number" data-target="3">0</div>
-                    <div class="stat-label">Research Directions</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" data-target="1">0</div>
-                    <div class="stat-label">Python Package</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">∞</div>
-                    <div class="stat-label">Future Possibilities</div>
-                </div>
-            </div>
+        
+        <nav class="nav">
+            <a href="#home" class="nav-link active">Home</a>
+            <a href="#model" class="nav-link">How It Works</a>
+            <a href="#concepts" class="nav-link">Concepts</a>
+            <a href="#diseases" class="nav-link">Diseases</a>
+            <a href="#demo" class="nav-link">Interactive Demo</a>
+        </nav>
+        
+        <div class="header-actions">
+            <a href="https://github.com/luminexlabs/lumenai" target="_blank" class="btn btn-outline btn-icon" title="GitHub">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+            </a>
+            <a href="https://luminexlabs.io" target="_blank" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                </svg>
+                luminexlabs.io
+            </a>
         </div>
-    </section>
+    </header>
 
-    <!-- Research Section -->
-    <section class="research-section" id="research">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Our Research Focus</h2>
-                <p class="section-subtitle">Advancing healthcare through cutting-edge AI research</p>
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-bg"></div>
+            
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                Powered by Explainable AI
             </div>
             
-            <div class="research-grid">
-                <!-- Skin Disease Research -->
-                <div class="research-card" data-aos="fade-up">
-                    <div class="research-icon">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="currentColor"/>
-                            <path d="M12 6C8.69 6 6 8.69 6 12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6ZM12 16C9.79 16 8 14.21 8 12C8 9.79 9.79 8 12 8C14.21 8 16 9.79 16 12C16 14.21 14.21 16 12 16Z" fill="currentColor"/>
-                        </svg>
-                    </div>
-                    <h3 class="research-title">Skin Disease Detection</h3>
-                    <div class="research-badge">Active Research</div>
-                    <p class="research-description">
-                        Developing advanced AI models for early detection and classification of various skin conditions. 
-                        Our research focuses on improving diagnostic accuracy and accessibility in dermatology.
-                    </p>
-                    <div class="research-tags">
-                        <span class="tag">Computer Vision</span>
-                        <span class="tag">Deep Learning</span>
-                        <span class="tag">Medical Imaging</span>
-                    </div>
+            <h1 class="hero-title">
+                <span class="text-gradient">LumenAI</span> Explainer
+            </h1>
+            
+            <p class="hero-subtitle">
+                Discover how our Multi-View Concept Bottleneck Model detects skin diseases 
+                with transparency and clinical interpretability.
+            </p>
+            
+            <div class="hero-actions">
+                <a href="#demo" class="btn btn-primary">
+                    🎮 Try Interactive Demo
+                </a>
+                <a href="#model" class="btn btn-outline">
+                    📖 Learn How It Works
+                </a>
+            </div>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-value">96.7%</div>
+                    <div class="stat-label">Accuracy</div>
                 </div>
-
-                <!-- Alzheimer's Research -->
-                <div class="research-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="research-icon">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C8.13 2 5 5.13 5 9C5 11.38 6.19 13.47 8 14.74V17C8 17.55 8.45 18 9 18H15C15.55 18 16 17.55 16 17V14.74C17.81 13.47 19 11.38 19 9C19 5.13 15.87 2 12 2ZM14 16H10V15H14V16ZM14.85 13.1L14 13.7V14H10V13.7L9.15 13.1C7.8 12.16 7 10.63 7 9C7 6.24 9.24 4 12 4C14.76 4 17 6.24 17 9C17 10.63 16.2 12.16 14.85 13.1Z" fill="currentColor"/>
-                            <circle cx="12" cy="9" r="2" fill="currentColor"/>
-                        </svg>
-                    </div>
-                    <h3 class="research-title">Alzheimer's Research</h3>
-                    <div class="research-badge">Active Research</div>
-                    <p class="research-description">
-                        Pioneering AI-driven approaches for early Alzheimer's detection and progression monitoring. 
-                        Leveraging machine learning to analyze neuroimaging data and identify biomarkers.
-                    </p>
-                    <div class="research-tags">
-                        <span class="tag">Neural Networks</span>
-                        <span class="tag">Neuroimaging</span>
-                        <span class="tag">Diagnostics</span>
-                    </div>
+                <div class="stat-item">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Disease Classes</div>
                 </div>
-
-                <!-- Blockchain in Rural Development -->
-                <div class="research-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="research-icon">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
-                            <path d="M2 17L12 22L22 17V12L12 17L2 12V17Z" fill="currentColor"/>
-                            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                    </div>
-                    <h3 class="research-title">Blockchain in Rural Development</h3>
-                    <div class="research-badge">Published</div>
-                    <p class="research-description">
-                        Exploring blockchain technology applications for rural development, focusing on transparency, 
-                        efficiency, and empowerment in rural communities through decentralized solutions.
-                    </p>
-                    <div class="research-tags">
-                        <span class="tag">Blockchain</span>
-                        <span class="tag">Rural Development</span>
-                        <span class="tag">Technology</span>
-                    </div>
-                    <a href="https://www.researchgate.net/publication/377977906_BLOCKCHAIN_IN_RURAL_DEVELOPMENT" target="_blank" rel="noopener noreferrer" class="research-link">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14 3V5H17.59L7.76 14.83L9.17 16.24L19 6.41V10H21V3H14Z" fill="currentColor"/>
-                            <path d="M19 19H5V5H12V3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V12H19V19Z" fill="currentColor"/>
-                        </svg>
-                        View on ResearchGate
-                    </a>
+                <div class="stat-item">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Clinical Concepts</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Multi-View Input</div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Supto Package Section -->
-    <section class="supto-section" id="supto">
-        <div class="container">
-            <div class="supto-content">
-                <div class="supto-text" data-aos="fade-right">
-                    <h2 class="section-title">Supto Python Package</h2>
-                    <p class="supto-intro">
-                        A comprehensive Python package designed specifically for medical science applications, 
-                        streamlining data processing and image analysis workflows.
-                    </p>
-                    
-                    <div class="features-list">
-                        <div class="feature-item">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M9 17L4 12L5.41 10.59L9 14.17L18.59 4.58L20 6L9 17Z" fill="currentColor"/>
-                                </svg>
-                            </div>
-                            <div class="feature-content">
-                                <h4>Data Cleaning</h4>
-                                <p>Advanced tools for medical data preprocessing, normalization, and quality control</p>
-                            </div>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M9 17L4 12L5.41 10.59L9 14.17L18.59 4.58L20 6L9 17Z" fill="currentColor"/>
-                                </svg>
-                            </div>
-                            <div class="feature-content">
-                                <h4>Medical Image Processing</h4>
-                                <p>Specialized algorithms for handling various medical imaging modalities</p>
-                            </div>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M9 17L4 12L5.41 10.59L9 14.17L18.59 4.58L20 6L9 17Z" fill="currentColor"/>
-                                </svg>
-                            </div>
-                            <div class="feature-content">
-                                <h4>Image Segmentation</h4>
-                                <p>State-of-the-art segmentation techniques for medical image analysis</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="code-install">
-                        <code>pip install supto</code>
-                        <button class="copy-btn" onclick="copyInstallCommand()">
-                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z" fill="currentColor"/>
-                            </svg>
-                        </button>
+        </section>
+        
+        <!-- How It Works Section -->
+        <section id="model" class="section">
+            <div class="section-header">
+                <span class="section-badge">🧠 Architecture</span>
+                <h2 class="section-title">How LumenAI Works</h2>
+                <p class="section-subtitle">
+                    Our model uses a concept bottleneck approach that mirrors how dermatologists 
+                    analyze skin lesions - making AI decisions transparent and interpretable.
+                </p>
+            </div>
+            
+            <div class="viz-container">
+                <div class="viz-header">
+                    <span class="viz-title">Model Pipeline Visualization</span>
+                    <div class="viz-controls">
+                        <button class="btn btn-outline btn-icon" title="Refresh">🔄</button>
                     </div>
                 </div>
                 
-                <div class="supto-visual" data-aos="fade-left">
-                    <div class="code-window">
-                        <div class="code-header">
-                            <span class="code-dot"></span>
-                            <span class="code-dot"></span>
-                            <span class="code-dot"></span>
+                <div class="model-flow">
+                    <!-- Stage 1: Input -->
+                    <div class="flow-stage">
+                        <div class="flow-node active" id="input-node">
+                            <div class="flow-node-icon">📸</div>
+                            <div class="flow-node-label">Multi-View Input</div>
+                            <div class="flow-node-sublabel">3-4 dermoscopic images</div>
                         </div>
-                        <div class="code-content">
-                            <pre><code><span class="code-keyword">from</span> supto <span class="code-keyword">import</span> ImageProcessor, DataCleaner
-
-<span class="code-comment"># Initialize processors</span>
-processor = ImageProcessor()
-cleaner = DataCleaner()
-
-<span class="code-comment"># Process medical images</span>
-processed_img = processor.preprocess(image)
-segmented = processor.segment(processed_img)
-
-<span class="code-comment"># Clean medical data</span>
-clean_data = cleaner.clean(raw_data)
-normalized = cleaner.normalize(clean_data)</code></pre>
+                    </div>
+                    
+                    <!-- Image Grid -->
+                    <div class="image-grid">
+                        <div class="image-slot filled">
+                            <div class="image-slot-icon">🖼️</div>
+                            <div class="image-slot-label">View 1</div>
+                            <div class="image-slot-badge">27%</div>
+                        </div>
+                        <div class="image-slot filled">
+                            <div class="image-slot-icon">🖼️</div>
+                            <div class="image-slot-label">View 2</div>
+                            <div class="image-slot-badge">26%</div>
+                        </div>
+                        <div class="image-slot filled">
+                            <div class="image-slot-icon">🖼️</div>
+                            <div class="image-slot-label">View 3</div>
+                            <div class="image-slot-badge">24%</div>
+                        </div>
+                        <div class="image-slot filled">
+                            <div class="image-slot-icon">🖼️</div>
+                            <div class="image-slot-label">View 4</div>
+                            <div class="image-slot-badge">23%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-arrow vertical">→</div>
+                    
+                    <!-- Stage 2: Feature Extraction -->
+                    <div class="flow-stage">
+                        <div class="flow-node" id="backbone-node">
+                            <div class="flow-node-icon">🔍</div>
+                            <div class="flow-node-label">EfficientNet-B0</div>
+                            <div class="flow-node-sublabel">Feature Extraction</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-node" id="attention-node">
+                            <div class="flow-node-icon">👁️</div>
+                            <div class="flow-node-label">Attention Fusion</div>
+                            <div class="flow-node-sublabel">View Weighting</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-arrow vertical">→</div>
+                    
+                    <!-- Stage 3: Concept Prediction -->
+                    <div class="flow-stage">
+                        <div class="flow-node" id="concept-node">
+                            <div class="flow-node-icon">🔬</div>
+                            <div class="flow-node-label">Concept Bottleneck</div>
+                            <div class="flow-node-sublabel">12 Clinical Concepts</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-arrow vertical">→</div>
+                    
+                    <!-- Stage 4: Classification -->
+                    <div class="flow-stage">
+                        <div class="flow-node" id="output-node">
+                            <div class="flow-node-icon">🎯</div>
+                            <div class="flow-node-label">Classification</div>
+                            <div class="flow-node-sublabel">8 Disease Classes</div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Vision Section -->
-    <section class="vision-section" id="about">
-        <div class="container">
-            <div class="vision-content">
-                <h2 class="section-title">Our Vision</h2>
-                <p class="vision-text">
-                    At LuminexLabs, we are committed to building the largest and most comprehensive AI healthcare platform. 
-                    Our current focus on skin disease detection and Alzheimer's research is just the beginning.
+            
+            <div class="info-box">
+                <p>
+                    <strong>💡 Key Innovation:</strong> Unlike black-box models, LumenAI first predicts 
+                    interpretable clinical concepts (ABCDE criteria), then uses these concepts to make 
+                    the final diagnosis - allowing doctors to understand and verify the AI's reasoning.
                 </p>
-                <div class="vision-grid">
-                    <div class="vision-card" data-aos="zoom-in">
-                        <h3>Current Focus</h3>
-                        <ul>
-                            <li>Skin Disease Detection & Classification</li>
-                            <li>Alzheimer's Early Detection</li>
-                            <li>Blockchain in Rural Development</li>
-                            <li>Supto Python Package Development</li>
-                        </ul>
+            </div>
+        </section>
+        
+        <!-- Clinical Concepts Section -->
+        <section id="concepts" class="section">
+            <div class="section-header">
+                <span class="section-badge">📊 ABCDE Criteria</span>
+                <h2 class="section-title">Clinical Concepts</h2>
+                <p class="section-subtitle">
+                    The model predicts 12 dermoscopic features that dermatologists use to 
+                    identify malignant lesions.
+                </p>
+            </div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">🔀</div>
+                    <h4 class="card-title">Asymmetry</h4>
+                    <p class="card-description">
+                        Measures shape irregularity. Malignant lesions often show asymmetry 
+                        when divided by any axis.
+                    </p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">📐</div>
+                    <h4 class="card-title">Border Irregularity</h4>
+                    <p class="card-description">
+                        Detects jagged, uneven, or blurred edges that are common in 
+                        melanomas and other malignancies.
+                    </p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">🎨</div>
+                    <h4 class="card-title">Color Variation</h4>
+                    <p class="card-description">
+                        Identifies multiple colors (brown, black, red, white, blue) within 
+                        the same lesion - a warning sign.
+                    </p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">📏</div>
+                    <h4 class="card-title">Diameter</h4>
+                    <p class="card-description">
+                        Lesions larger than 6mm deserve attention. The model estimates 
+                        relative size from image context.
+                    </p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">🌫️</div>
+                    <h4 class="card-title">Blue-White Veil</h4>
+                    <p class="card-description">
+                        A specific dermoscopic pattern strongly associated with melanoma, 
+                        appearing as a blue-white haze.
+                    </p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">🕸️</div>
+                    <h4 class="card-title">Pigment Network</h4>
+                    <p class="card-description">
+                        Analyzes the honeycomb pattern of pigmentation. Atypical networks 
+                        suggest malignancy.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Live Concept Demo -->
+            <div class="concepts-panel" style="margin-top: 40px;">
+                <div class="concepts-header">
+                    <span class="concepts-title">
+                        🔬 Live Concept Scores
+                    </span>
+                    <span class="concepts-badge">Simulated</span>
+                </div>
+                
+                <div class="concept-bar">
+                    <div class="concept-bar-header">
+                        <span class="concept-name">Asymmetry</span>
+                        <span class="concept-value">0.92</span>
                     </div>
-                    <div class="vision-card" data-aos="zoom-in" data-aos-delay="100">
-                        <h3>Future Expansion</h3>
-                        <ul>
-                            <li>Broader Medical Imaging Applications</li>
-                            <li>Multi-disease Detection Systems</li>
-                            <li>Advanced Healthcare Analytics</li>
-                        </ul>
+                    <div class="concept-bar-track">
+                        <div class="concept-bar-fill high" style="width: 92%"></div>
                     </div>
-                    <div class="vision-card" data-aos="zoom-in" data-aos-delay="200">
-                        <h3>Long-term Goals</h3>
-                        <ul>
-                            <li>Largest AI Healthcare Platform</li>
-                            <li>Global Healthcare Accessibility</li>
-                            <li>Continuous Medical Research Innovation</li>
-                        </ul>
+                </div>
+                
+                <div class="concept-bar">
+                    <div class="concept-bar-header">
+                        <span class="concept-name">Border Irregularity</span>
+                        <span class="concept-value">0.85</span>
+                    </div>
+                    <div class="concept-bar-track">
+                        <div class="concept-bar-fill high" style="width: 85%"></div>
+                    </div>
+                </div>
+                
+                <div class="concept-bar">
+                    <div class="concept-bar-header">
+                        <span class="concept-name">Color Variation</span>
+                        <span class="concept-value">0.78</span>
+                    </div>
+                    <div class="concept-bar-track">
+                        <div class="concept-bar-fill medium" style="width: 78%"></div>
+                    </div>
+                </div>
+                
+                <div class="concept-bar">
+                    <div class="concept-bar-header">
+                        <span class="concept-name">Diameter Large</span>
+                        <span class="concept-value">0.65</span>
+                    </div>
+                    <div class="concept-bar-track">
+                        <div class="concept-bar-fill medium" style="width: 65%"></div>
+                    </div>
+                </div>
+                
+                <div class="concept-bar">
+                    <div class="concept-bar-header">
+                        <span class="concept-name">Blue-White Veil</span>
+                        <span class="concept-value">0.71</span>
+                    </div>
+                    <div class="concept-bar-track">
+                        <div class="concept-bar-fill medium" style="width: 71%"></div>
+                    </div>
+                </div>
+                
+                <div class="concept-bar">
+                    <div class="concept-bar-header">
+                        <span class="concept-name">Pigment Network</span>
+                        <span class="concept-value">0.45</span>
+                    </div>
+                    <div class="concept-bar-track">
+                        <div class="concept-bar-fill medium" style="width: 45%"></div>
+                    </div>
+                </div>
+                
+                <div class="concept-bar">
+                    <div class="concept-bar-header">
+                        <span class="concept-name">Regression Areas</span>
+                        <span class="concept-value">0.38</span>
+                    </div>
+                    <div class="concept-bar-track">
+                        <div class="concept-bar-fill low" style="width: 38%"></div>
+                    </div>
+                </div>
+                
+                <div class="concept-bar">
+                    <div class="concept-bar-header">
+                        <span class="concept-name">Ulceration</span>
+                        <span class="concept-value">0.23</span>
+                    </div>
+                    <div class="concept-bar-track">
+                        <div class="concept-bar-fill low" style="width: 23%"></div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
+        </section>
+        
+        <!-- Diseases Section -->
+        <section id="diseases" class="section">
+            <div class="section-header">
+                <span class="section-badge">🏥 Classification</span>
+                <h2 class="section-title">Supported Conditions</h2>
+                <p class="section-subtitle">
+                    LumenAI can detect 8 types of skin lesions, from benign moles to 
+                    malignant melanomas.
+                </p>
+            </div>
+            
+            <div class="disease-cards">
+                <div class="disease-card malignant">
+                    <div class="disease-code">MEL</div>
+                    <div class="disease-name">Melanoma</div>
+                    <span class="disease-risk high">High Risk</span>
+                </div>
+                
+                <div class="disease-card malignant">
+                    <div class="disease-code">BCC</div>
+                    <div class="disease-name">Basal Cell Carcinoma</div>
+                    <span class="disease-risk high">High Risk</span>
+                </div>
+                
+                <div class="disease-card malignant">
+                    <div class="disease-code">SCC</div>
+                    <div class="disease-name">Squamous Cell Carcinoma</div>
+                    <span class="disease-risk high">High Risk</span>
+                </div>
+                
+                <div class="disease-card precancer">
+                    <div class="disease-code">AK</div>
+                    <div class="disease-name">Actinic Keratosis</div>
+                    <span class="disease-risk medium">Precancerous</span>
+                </div>
+                
+                <div class="disease-card benign">
+                    <div class="disease-code">NV</div>
+                    <div class="disease-name">Melanocytic Nevus</div>
+                    <span class="disease-risk low">Benign</span>
+                </div>
+                
+                <div class="disease-card benign">
+                    <div class="disease-code">BKL</div>
+                    <div class="disease-name">Benign Keratosis</div>
+                    <span class="disease-risk low">Benign</span>
+                </div>
+                
+                <div class="disease-card benign">
+                    <div class="disease-code">DF</div>
+                    <div class="disease-name">Dermatofibroma</div>
+                    <span class="disease-risk low">Benign</span>
+                </div>
+                
+                <div class="disease-card benign">
+                    <div class="disease-code">VASC</div>
+                    <div class="disease-name">Vascular Lesion</div>
+                    <span class="disease-risk low">Benign</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Interactive Demo Section -->
+        <section id="demo" class="section">
+            <div class="section-header">
+                <span class="section-badge">🎮 Interactive</span>
+                <h2 class="section-title">Live Prediction Demo</h2>
+                <p class="section-subtitle">
+                    See the model in action with simulated predictions and concept activations.
+                </p>
+            </div>
+            
+            <div class="viz-container">
+                <div class="viz-header">
+                    <span class="viz-title">Real-Time Prediction</span>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+                    <!-- Left: Network Visualization -->
+                    <div>
+                        <h4 style="margin-bottom: 16px; color: #a1a1aa; font-size: 14px;">Neural Network Architecture</h4>
+                        <div id="network-viz" style="background: #12121a; border-radius: 12px; padding: 20px; border: 1px solid rgba(255,255,255,0.1);"></div>
+                    </div>
+                    
+                    <!-- Right: Prediction Output -->
+                    <div>
+                        <h4 style="margin-bottom: 16px; color: #a1a1aa; font-size: 14px;">Model Output</h4>
+                        <div class="prediction-card animate-glow">
+                            <div class="prediction-label">AI Diagnosis</div>
+                            <div class="prediction-class">Melanoma (MEL)</div>
+                            <div class="prediction-confidence">96.7%</div>
+                            <div class="prediction-confidence-label">Model Confidence</div>
+                        </div>
+                        
+                        <div style="margin-top: 24px;">
+                            <h4 style="margin-bottom: 12px; color: #a1a1aa; font-size: 14px;">Attention Distribution</h4>
+                            <div style="display: flex; gap: 12px;">
+                                <div style="flex: 1; background: #1a1a24; border-radius: 8px; padding: 12px; text-align: center;">
+                                    <div style="font-size: 20px; font-weight: 700; color: #00d4ff;">27%</div>
+                                    <div style="font-size: 11px; color: #666;">View 1</div>
+                                </div>
+                                <div style="flex: 1; background: #1a1a24; border-radius: 8px; padding: 12px; text-align: center;">
+                                    <div style="font-size: 20px; font-weight: 700; color: #00d4ff;">26%</div>
+                                    <div style="font-size: 11px; color: #666;">View 2</div>
+                                </div>
+                                <div style="flex: 1; background: #1a1a24; border-radius: 8px; padding: 12px; text-align: center;">
+                                    <div style="font-size: 20px; font-weight: 700; color: #7c3aed;">24%</div>
+                                    <div style="font-size: 11px; color: #666;">View 3</div>
+                                </div>
+                                <div style="flex: 1; background: #1a1a24; border-radius: 8px; padding: 12px; text-align: center;">
+                                    <div style="font-size: 20px; font-weight: 700; color: #7c3aed;">23%</div>
+                                    <div style="font-size: 11px; color: #666;">View 4</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Technical Details Section -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-badge">⚙️ Technical</span>
+                <h2 class="section-title">Model Specifications</h2>
+            </div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">🏗️</div>
+                    <h4 class="card-title">Architecture</h4>
+                    <div class="code-block">
+Backbone: EfficientNet-B0
+Attention: Multi-Head Self-Attention
+Concepts: 12 Clinical Features
+Classifier: 8 Disease Classes
+Parameters: ~5.3M
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <h4 class="card-title">Training</h4>
+                    <div class="code-block">
+Dataset: HAM10000 + ISIC Archive
+Input Size: 224x224 RGB
+Optimizer: AdamW
+Loss: Cross-Entropy + BCE
+Epochs: 100 with Early Stopping
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">🔧</div>
+                    <h4 class="card-title">XAI Features</h4>
+                    <div class="code-block">
+GradCAM++: Visual Attention Maps
+SHAP: Feature Attribution
+Concept Activation: Clinical Reasoning
+Confidence Calibration: Temperature Scaling
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <div class="logo">
-                        <span class="logo-text">Luminex<span class="logo-accent">Labs</span></span>
-                    </div>
-                    <p>Pioneering the future of AI in healthcare</p>
-                </div>
-                <div class="footer-links">
-                    <div class="footer-column">
-                        <h4>Research</h4>
-                        <ul>
-                            <li><a href="#research">Skin Disease</a></li>
-                            <li><a href="#research">Alzheimer's</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-column">
-                        <h4>Resources</h4>
-                        <ul>
-                            <li><a href="#supto">Supto Package</a></li>
-                            <li><a href="#about">About Us</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-column">
-                        <h4>Publications</h4>
-                        <ul>
-                            <li><a href="https://www.researchgate.net/publication/377977906_BLOCKCHAIN_IN_RURAL_DEVELOPMENT" target="_blank" rel="noopener noreferrer">ResearchGate</a></li>
-                        </ul>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="logo">
+                    <div class="logo-icon">🔬</div>
+                    <div class="logo-text">
+                        <span class="lumen">LUMEN</span><span class="ai">AI</span>
                     </div>
                 </div>
+                <p>
+                    Advancing AI in healthcare through explainable machine learning. 
+                    Making AI decisions transparent and trustworthy.
+                </p>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 LuminexLabs. All rights reserved.</p>
+            
+            <div>
+                <h5 class="footer-title">Product</h5>
+                <ul class="footer-links">
+                    <li><a href="#model">How It Works</a></li>
+                    <li><a href="#concepts">Clinical Concepts</a></li>
+                    <li><a href="#demo">Interactive Demo</a></li>
+                    <li><a href="https://luminexlabs.io/download">Download App</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h5 class="footer-title">Resources</h5>
+                <ul class="footer-links">
+                    <li><a href="https://luminexlabs.io/docs">Documentation</a></li>
+                    <li><a href="https://luminexlabs.io/api">API Reference</a></li>
+                    <li><a href="https://luminexlabs.io/research">Research Paper</a></li>
+                    <li><a href="https://github.com/luminexlabs/lumenai">GitHub</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h5 class="footer-title">Company</h5>
+                <ul class="footer-links">
+                    <li><a href="https://luminexlabs.io/about">About Us</a></li>
+                    <li><a href="https://luminexlabs.io/contact">Contact</a></li>
+                    <li><a href="https://luminexlabs.io/privacy">Privacy Policy</a></li>
+                    <li><a href="https://luminexlabs.io/terms">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                © 2024 LuminexLabs. All rights reserved.
+            </div>
+            <div class="footer-social">
+                <a href="https://github.com/luminexlabs" target="_blank" title="GitHub">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+                <a href="https://twitter.com/luminexlabs" target="_blank" title="Twitter">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+                <a href="https://linkedin.com/company/luminexlabs" target="_blank" title="LinkedIn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                </a>
             </div>
         </div>
     </footer>
-
-    <script src="script.js"></script>
+    
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/visualizations.js"></script>
 </body>
 </html>
