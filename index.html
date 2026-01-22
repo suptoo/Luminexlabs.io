@@ -3,659 +3,477 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LumenAI Explainer | Interactive Skin Disease Detection AI</title>
-    
-    <!-- SEO Meta Tags -->
-    <meta name="title" content="LumenAI Explainer - Interactive Skin Disease Detection AI">
-    <meta name="description" content="Explore how LumenAI uses explainable AI to detect skin diseases. Interactive visualization of the Multi-View Concept Bottleneck Model.">
-    <meta name="keywords" content="skin disease, AI, machine learning, explainable AI, dermoscopy, melanoma detection, LuminexLabs">
-    <meta name="author" content="LuminexLabs">
-    
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://luminexlabs.io/lumenai">
-    <meta property="og:title" content="LumenAI Explainer - Interactive Skin Disease Detection AI">
-    <meta property="og:description" content="Explore how LumenAI uses explainable AI to detect skin diseases with 96.7% accuracy.">
-    <meta property="og:image" content="https://luminexlabs.io/assets/og-image.png">
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://luminexlabs.io/lumenai">
-    <meta property="twitter:title" content="LumenAI Explainer">
-    <meta property="twitter:description" content="Interactive visualization of AI skin disease detection">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
-    
-    <!-- D3.js -->
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="css/styles.css">
-    
-    <!-- Tooltip Styles -->
+    <title>LuminexLabs - AI & Web App Development</title>
     <style>
-        .tooltip {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 20px 0;
             position: fixed;
-            background: rgba(26, 26, 36, 0.95);
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(15, 12, 41, 0.95);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 24px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: float 6s infinite;
+        }
+
+        .services {
+            padding: 100px 0;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 60px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 12px 16px;
-            max-width: 280px;
-            z-index: 10000;
-            pointer-events: none;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s, visibility 0.2s;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
         }
-        .tooltip-title {
-            font-weight: 600;
-            color: #00d4ff;
-            margin-bottom: 4px;
-            font-size: 13px;
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
         }
-        .tooltip-content {
-            color: #a1a1aa;
-            font-size: 12px;
-            line-height: 1.5;
+
+        .service-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
         }
-        .header.scrolled {
-            background: rgba(10, 10, 15, 0.98);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+        .service-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .service-card p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .tech-stack {
+            padding: 100px 0;
+        }
+
+        .tech-logos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .tech-item {
+            padding: 20px 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .tech-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: scale(1.1);
+        }
+
+        .contact {
+            padding: 100px 0;
+            background: rgba(255, 255, 255, 0.03);
+            text-align: center;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 40px auto 0;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 40px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .section-title {
+                font-size: 36px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">
-            <div class="logo-icon">🔬</div>
-            <div class="logo-text">
-                <span class="lumen">LUMEN</span><span class="ai">AI</span>
-            </div>
-            <div class="logo-divider"></div>
-            <span class="logo-subtitle">Explainer</span>
-        </div>
-        
-        <nav class="nav">
-            <a href="#home" class="nav-link active">Home</a>
-            <a href="#model" class="nav-link">How It Works</a>
-            <a href="#concepts" class="nav-link">Concepts</a>
-            <a href="#diseases" class="nav-link">Diseases</a>
-            <a href="#demo" class="nav-link">Interactive Demo</a>
-        </nav>
-        
-        <div class="header-actions">
-            <a href="https://github.com/luminexlabs/lumenai" target="_blank" class="btn btn-outline btn-icon" title="GitHub">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                </svg>
-            </a>
-            <a href="https://luminexlabs.io" target="_blank" class="btn btn-primary">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                </svg>
-                luminexlabs.io
-            </a>
+    <header id="header">
+        <div class="container">
+            <nav>
+                <div class="logo">LuminexLabs</div>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#tech">Tech Stack</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="main">
-        <!-- Hero Section -->
-        <section id="home" class="hero">
-            <div class="hero-bg"></div>
-            
-            <div class="hero-badge">
-                <span class="hero-badge-dot"></span>
-                Powered by Explainable AI
-            </div>
-            
-            <h1 class="hero-title">
-                <span class="text-gradient">LumenAI</span> Explainer
-            </h1>
-            
-            <p class="hero-subtitle">
-                Discover how our Multi-View Concept Bottleneck Model detects skin diseases 
-                with transparency and clinical interpretability.
-            </p>
-            
-            <div class="hero-actions">
-                <a href="#demo" class="btn btn-primary">
-                    🎮 Try Interactive Demo
-                </a>
-                <a href="#model" class="btn btn-outline">
-                    📖 Learn How It Works
-                </a>
-            </div>
-            
-            <div class="hero-stats">
-                <div class="stat-item">
-                    <div class="stat-value">96.7%</div>
-                    <div class="stat-label">Accuracy</div>
+    <section class="hero" id="home">
+        <div class="particles" id="particles"></div>
+        <div class="hero-content container">
+            <h1>Welcome to <span class="gradient-text">LuminexLabs</span></h1>
+            <p>Transforming Ideas into Intelligent Solutions</p>
+            <a href="#contact" class="cta-button">Start Your Project</a>
+        </div>
+    </section>
+
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">What We <span class="gradient-text">Offer</span></h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🌐</div>
+                    <h3>Web App Development</h3>
+                    <p>Build responsive, scalable, and high-performance web applications tailored to your business needs using modern frameworks and technologies.</p>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-value">8</div>
-                    <div class="stat-label">Disease Classes</div>
+                <div class="service-card">
+                    <div class="service-icon">🤖</div>
+                    <h3>AI Development</h3>
+                    <p>Leverage cutting-edge artificial intelligence and machine learning to create intelligent systems that drive innovation and efficiency.</p>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-value">12</div>
-                    <div class="stat-label">Clinical Concepts</div>
+                <div class="service-card">
+                    <div class="service-icon">💡</div>
+                    <h3>Custom Solutions</h3>
+                    <p>From natural language processing to computer vision, we develop custom AI solutions that solve real-world problems.</p>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-value">4</div>
-                    <div class="stat-label">Multi-View Input</div>
+                <div class="service-card">
+                    <div class="service-icon">📱</div>
+                    <h3>Full Stack Development</h3>
+                    <p>End-to-end development services covering frontend, backend, databases, and cloud deployment for complete solutions.</p>
                 </div>
-            </div>
-        </section>
-        
-        <!-- How It Works Section -->
-        <section id="model" class="section">
-            <div class="section-header">
-                <span class="section-badge">🧠 Architecture</span>
-                <h2 class="section-title">How LumenAI Works</h2>
-                <p class="section-subtitle">
-                    Our model uses a concept bottleneck approach that mirrors how dermatologists 
-                    analyze skin lesions - making AI decisions transparent and interpretable.
-                </p>
-            </div>
-            
-            <div class="viz-container">
-                <div class="viz-header">
-                    <span class="viz-title">Model Pipeline Visualization</span>
-                    <div class="viz-controls">
-                        <button class="btn btn-outline btn-icon" title="Refresh">🔄</button>
-                    </div>
+                <div class="service-card">
+                    <div class="service-icon">⚡</div>
+                    <h3>AI Integration</h3>
+                    <p>Seamlessly integrate AI capabilities into your existing applications to enhance functionality and user experience.</p>
                 </div>
-                
-                <div class="model-flow">
-                    <!-- Stage 1: Input -->
-                    <div class="flow-stage">
-                        <div class="flow-node active" id="input-node">
-                            <div class="flow-node-icon">📸</div>
-                            <div class="flow-node-label">Multi-View Input</div>
-                            <div class="flow-node-sublabel">3-4 dermoscopic images</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Image Grid -->
-                    <div class="image-grid">
-                        <div class="image-slot filled">
-                            <div class="image-slot-icon">🖼️</div>
-                            <div class="image-slot-label">View 1</div>
-                            <div class="image-slot-badge">27%</div>
-                        </div>
-                        <div class="image-slot filled">
-                            <div class="image-slot-icon">🖼️</div>
-                            <div class="image-slot-label">View 2</div>
-                            <div class="image-slot-badge">26%</div>
-                        </div>
-                        <div class="image-slot filled">
-                            <div class="image-slot-icon">🖼️</div>
-                            <div class="image-slot-label">View 3</div>
-                            <div class="image-slot-badge">24%</div>
-                        </div>
-                        <div class="image-slot filled">
-                            <div class="image-slot-icon">🖼️</div>
-                            <div class="image-slot-label">View 4</div>
-                            <div class="image-slot-badge">23%</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flow-arrow vertical">→</div>
-                    
-                    <!-- Stage 2: Feature Extraction -->
-                    <div class="flow-stage">
-                        <div class="flow-node" id="backbone-node">
-                            <div class="flow-node-icon">🔍</div>
-                            <div class="flow-node-label">EfficientNet-B0</div>
-                            <div class="flow-node-sublabel">Feature Extraction</div>
-                        </div>
-                        <div class="flow-arrow">→</div>
-                        <div class="flow-node" id="attention-node">
-                            <div class="flow-node-icon">👁️</div>
-                            <div class="flow-node-label">Attention Fusion</div>
-                            <div class="flow-node-sublabel">View Weighting</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flow-arrow vertical">→</div>
-                    
-                    <!-- Stage 3: Concept Prediction -->
-                    <div class="flow-stage">
-                        <div class="flow-node" id="concept-node">
-                            <div class="flow-node-icon">🔬</div>
-                            <div class="flow-node-label">Concept Bottleneck</div>
-                            <div class="flow-node-sublabel">12 Clinical Concepts</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flow-arrow vertical">→</div>
-                    
-                    <!-- Stage 4: Classification -->
-                    <div class="flow-stage">
-                        <div class="flow-node" id="output-node">
-                            <div class="flow-node-icon">🎯</div>
-                            <div class="flow-node-label">Classification</div>
-                            <div class="flow-node-sublabel">8 Disease Classes</div>
-                        </div>
-                    </div>
+                <div class="service-card">
+                    <div class="service-icon">🎯</div>
+                    <h3>Consulting</h3>
+                    <p>Strategic guidance on technology choices, architecture design, and implementation strategies for your projects.</p>
                 </div>
-            </div>
-            
-            <div class="info-box">
-                <p>
-                    <strong>💡 Key Innovation:</strong> Unlike black-box models, LumenAI first predicts 
-                    interpretable clinical concepts (ABCDE criteria), then uses these concepts to make 
-                    the final diagnosis - allowing doctors to understand and verify the AI's reasoning.
-                </p>
-            </div>
-        </section>
-        
-        <!-- Clinical Concepts Section -->
-        <section id="concepts" class="section">
-            <div class="section-header">
-                <span class="section-badge">📊 ABCDE Criteria</span>
-                <h2 class="section-title">Clinical Concepts</h2>
-                <p class="section-subtitle">
-                    The model predicts 12 dermoscopic features that dermatologists use to 
-                    identify malignant lesions.
-                </p>
-            </div>
-            
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-icon">🔀</div>
-                    <h4 class="card-title">Asymmetry</h4>
-                    <p class="card-description">
-                        Measures shape irregularity. Malignant lesions often show asymmetry 
-                        when divided by any axis.
-                    </p>
-                </div>
-                
-                <div class="card">
-                    <div class="card-icon">📐</div>
-                    <h4 class="card-title">Border Irregularity</h4>
-                    <p class="card-description">
-                        Detects jagged, uneven, or blurred edges that are common in 
-                        melanomas and other malignancies.
-                    </p>
-                </div>
-                
-                <div class="card">
-                    <div class="card-icon">🎨</div>
-                    <h4 class="card-title">Color Variation</h4>
-                    <p class="card-description">
-                        Identifies multiple colors (brown, black, red, white, blue) within 
-                        the same lesion - a warning sign.
-                    </p>
-                </div>
-                
-                <div class="card">
-                    <div class="card-icon">📏</div>
-                    <h4 class="card-title">Diameter</h4>
-                    <p class="card-description">
-                        Lesions larger than 6mm deserve attention. The model estimates 
-                        relative size from image context.
-                    </p>
-                </div>
-                
-                <div class="card">
-                    <div class="card-icon">🌫️</div>
-                    <h4 class="card-title">Blue-White Veil</h4>
-                    <p class="card-description">
-                        A specific dermoscopic pattern strongly associated with melanoma, 
-                        appearing as a blue-white haze.
-                    </p>
-                </div>
-                
-                <div class="card">
-                    <div class="card-icon">🕸️</div>
-                    <h4 class="card-title">Pigment Network</h4>
-                    <p class="card-description">
-                        Analyzes the honeycomb pattern of pigmentation. Atypical networks 
-                        suggest malignancy.
-                    </p>
-                </div>
-            </div>
-            
-            <!-- Live Concept Demo -->
-            <div class="concepts-panel" style="margin-top: 40px;">
-                <div class="concepts-header">
-                    <span class="concepts-title">
-                        🔬 Live Concept Scores
-                    </span>
-                    <span class="concepts-badge">Simulated</span>
-                </div>
-                
-                <div class="concept-bar">
-                    <div class="concept-bar-header">
-                        <span class="concept-name">Asymmetry</span>
-                        <span class="concept-value">0.92</span>
-                    </div>
-                    <div class="concept-bar-track">
-                        <div class="concept-bar-fill high" style="width: 92%"></div>
-                    </div>
-                </div>
-                
-                <div class="concept-bar">
-                    <div class="concept-bar-header">
-                        <span class="concept-name">Border Irregularity</span>
-                        <span class="concept-value">0.85</span>
-                    </div>
-                    <div class="concept-bar-track">
-                        <div class="concept-bar-fill high" style="width: 85%"></div>
-                    </div>
-                </div>
-                
-                <div class="concept-bar">
-                    <div class="concept-bar-header">
-                        <span class="concept-name">Color Variation</span>
-                        <span class="concept-value">0.78</span>
-                    </div>
-                    <div class="concept-bar-track">
-                        <div class="concept-bar-fill medium" style="width: 78%"></div>
-                    </div>
-                </div>
-                
-                <div class="concept-bar">
-                    <div class="concept-bar-header">
-                        <span class="concept-name">Diameter Large</span>
-                        <span class="concept-value">0.65</span>
-                    </div>
-                    <div class="concept-bar-track">
-                        <div class="concept-bar-fill medium" style="width: 65%"></div>
-                    </div>
-                </div>
-                
-                <div class="concept-bar">
-                    <div class="concept-bar-header">
-                        <span class="concept-name">Blue-White Veil</span>
-                        <span class="concept-value">0.71</span>
-                    </div>
-                    <div class="concept-bar-track">
-                        <div class="concept-bar-fill medium" style="width: 71%"></div>
-                    </div>
-                </div>
-                
-                <div class="concept-bar">
-                    <div class="concept-bar-header">
-                        <span class="concept-name">Pigment Network</span>
-                        <span class="concept-value">0.45</span>
-                    </div>
-                    <div class="concept-bar-track">
-                        <div class="concept-bar-fill medium" style="width: 45%"></div>
-                    </div>
-                </div>
-                
-                <div class="concept-bar">
-                    <div class="concept-bar-header">
-                        <span class="concept-name">Regression Areas</span>
-                        <span class="concept-value">0.38</span>
-                    </div>
-                    <div class="concept-bar-track">
-                        <div class="concept-bar-fill low" style="width: 38%"></div>
-                    </div>
-                </div>
-                
-                <div class="concept-bar">
-                    <div class="concept-bar-header">
-                        <span class="concept-name">Ulceration</span>
-                        <span class="concept-value">0.23</span>
-                    </div>
-                    <div class="concept-bar-track">
-                        <div class="concept-bar-fill low" style="width: 23%"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Diseases Section -->
-        <section id="diseases" class="section">
-            <div class="section-header">
-                <span class="section-badge">🏥 Classification</span>
-                <h2 class="section-title">Supported Conditions</h2>
-                <p class="section-subtitle">
-                    LumenAI can detect 8 types of skin lesions, from benign moles to 
-                    malignant melanomas.
-                </p>
-            </div>
-            
-            <div class="disease-cards">
-                <div class="disease-card malignant">
-                    <div class="disease-code">MEL</div>
-                    <div class="disease-name">Melanoma</div>
-                    <span class="disease-risk high">High Risk</span>
-                </div>
-                
-                <div class="disease-card malignant">
-                    <div class="disease-code">BCC</div>
-                    <div class="disease-name">Basal Cell Carcinoma</div>
-                    <span class="disease-risk high">High Risk</span>
-                </div>
-                
-                <div class="disease-card malignant">
-                    <div class="disease-code">SCC</div>
-                    <div class="disease-name">Squamous Cell Carcinoma</div>
-                    <span class="disease-risk high">High Risk</span>
-                </div>
-                
-                <div class="disease-card precancer">
-                    <div class="disease-code">AK</div>
-                    <div class="disease-name">Actinic Keratosis</div>
-                    <span class="disease-risk medium">Precancerous</span>
-                </div>
-                
-                <div class="disease-card benign">
-                    <div class="disease-code">NV</div>
-                    <div class="disease-name">Melanocytic Nevus</div>
-                    <span class="disease-risk low">Benign</span>
-                </div>
-                
-                <div class="disease-card benign">
-                    <div class="disease-code">BKL</div>
-                    <div class="disease-name">Benign Keratosis</div>
-                    <span class="disease-risk low">Benign</span>
-                </div>
-                
-                <div class="disease-card benign">
-                    <div class="disease-code">DF</div>
-                    <div class="disease-name">Dermatofibroma</div>
-                    <span class="disease-risk low">Benign</span>
-                </div>
-                
-                <div class="disease-card benign">
-                    <div class="disease-code">VASC</div>
-                    <div class="disease-name">Vascular Lesion</div>
-                    <span class="disease-risk low">Benign</span>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Interactive Demo Section -->
-        <section id="demo" class="section">
-            <div class="section-header">
-                <span class="section-badge">🎮 Interactive</span>
-                <h2 class="section-title">Live Prediction Demo</h2>
-                <p class="section-subtitle">
-                    See the model in action with simulated predictions and concept activations.
-                </p>
-            </div>
-            
-            <div class="viz-container">
-                <div class="viz-header">
-                    <span class="viz-title">Real-Time Prediction</span>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
-                    <!-- Left: Network Visualization -->
-                    <div>
-                        <h4 style="margin-bottom: 16px; color: #a1a1aa; font-size: 14px;">Neural Network Architecture</h4>
-                        <div id="network-viz" style="background: #12121a; border-radius: 12px; padding: 20px; border: 1px solid rgba(255,255,255,0.1);"></div>
-                    </div>
-                    
-                    <!-- Right: Prediction Output -->
-                    <div>
-                        <h4 style="margin-bottom: 16px; color: #a1a1aa; font-size: 14px;">Model Output</h4>
-                        <div class="prediction-card animate-glow">
-                            <div class="prediction-label">AI Diagnosis</div>
-                            <div class="prediction-class">Melanoma (MEL)</div>
-                            <div class="prediction-confidence">96.7%</div>
-                            <div class="prediction-confidence-label">Model Confidence</div>
-                        </div>
-                        
-                        <div style="margin-top: 24px;">
-                            <h4 style="margin-bottom: 12px; color: #a1a1aa; font-size: 14px;">Attention Distribution</h4>
-                            <div style="display: flex; gap: 12px;">
-                                <div style="flex: 1; background: #1a1a24; border-radius: 8px; padding: 12px; text-align: center;">
-                                    <div style="font-size: 20px; font-weight: 700; color: #00d4ff;">27%</div>
-                                    <div style="font-size: 11px; color: #666;">View 1</div>
-                                </div>
-                                <div style="flex: 1; background: #1a1a24; border-radius: 8px; padding: 12px; text-align: center;">
-                                    <div style="font-size: 20px; font-weight: 700; color: #00d4ff;">26%</div>
-                                    <div style="font-size: 11px; color: #666;">View 2</div>
-                                </div>
-                                <div style="flex: 1; background: #1a1a24; border-radius: 8px; padding: 12px; text-align: center;">
-                                    <div style="font-size: 20px; font-weight: 700; color: #7c3aed;">24%</div>
-                                    <div style="font-size: 11px; color: #666;">View 3</div>
-                                </div>
-                                <div style="flex: 1; background: #1a1a24; border-radius: 8px; padding: 12px; text-align: center;">
-                                    <div style="font-size: 20px; font-weight: 700; color: #7c3aed;">23%</div>
-                                    <div style="font-size: 11px; color: #666;">View 4</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Technical Details Section -->
-        <section class="section">
-            <div class="section-header">
-                <span class="section-badge">⚙️ Technical</span>
-                <h2 class="section-title">Model Specifications</h2>
-            </div>
-            
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-icon">🏗️</div>
-                    <h4 class="card-title">Architecture</h4>
-                    <div class="code-block">
-Backbone: EfficientNet-B0
-Attention: Multi-Head Self-Attention
-Concepts: 12 Clinical Features
-Classifier: 8 Disease Classes
-Parameters: ~5.3M
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-icon">📊</div>
-                    <h4 class="card-title">Training</h4>
-                    <div class="code-block">
-Dataset: HAM10000 + ISIC Archive
-Input Size: 224x224 RGB
-Optimizer: AdamW
-Loss: Cross-Entropy + BCE
-Epochs: 100 with Early Stopping
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-icon">🔧</div>
-                    <h4 class="card-title">XAI Features</h4>
-                    <div class="code-block">
-GradCAM++: Visual Attention Maps
-SHAP: Feature Attribution
-Concept Activation: Clinical Reasoning
-Confidence Calibration: Temperature Scaling
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-    
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-brand">
-                <div class="logo">
-                    <div class="logo-icon">🔬</div>
-                    <div class="logo-text">
-                        <span class="lumen">LUMEN</span><span class="ai">AI</span>
-                    </div>
-                </div>
-                <p>
-                    Advancing AI in healthcare through explainable machine learning. 
-                    Making AI decisions transparent and trustworthy.
-                </p>
-            </div>
-            
-            <div>
-                <h5 class="footer-title">Product</h5>
-                <ul class="footer-links">
-                    <li><a href="#model">How It Works</a></li>
-                    <li><a href="#concepts">Clinical Concepts</a></li>
-                    <li><a href="#demo">Interactive Demo</a></li>
-                    <li><a href="https://luminexlabs.io/download">Download App</a></li>
-                </ul>
-            </div>
-            
-            <div>
-                <h5 class="footer-title">Resources</h5>
-                <ul class="footer-links">
-                    <li><a href="https://luminexlabs.io/docs">Documentation</a></li>
-                    <li><a href="https://luminexlabs.io/api">API Reference</a></li>
-                    <li><a href="https://luminexlabs.io/research">Research Paper</a></li>
-                    <li><a href="https://github.com/luminexlabs/lumenai">GitHub</a></li>
-                </ul>
-            </div>
-            
-            <div>
-                <h5 class="footer-title">Company</h5>
-                <ul class="footer-links">
-                    <li><a href="https://luminexlabs.io/about">About Us</a></li>
-                    <li><a href="https://luminexlabs.io/contact">Contact</a></li>
-                    <li><a href="https://luminexlabs.io/privacy">Privacy Policy</a></li>
-                    <li><a href="https://luminexlabs.io/terms">Terms of Service</a></li>
-                </ul>
             </div>
         </div>
-        
-        <div class="footer-bottom">
-            <div class="footer-copyright">
-                © 2024 LuminexLabs. All rights reserved.
+    </section>
+
+    <section class="tech-stack" id="tech">
+        <div class="container">
+            <h2 class="section-title">Our <span class="gradient-text">Tech Stack</span></h2>
+            <div class="tech-logos">
+                <div class="tech-item">React</div>
+                <div class="tech-item">Node.js</div>
+                <div class="tech-item">Python</div>
+                <div class="tech-item">TensorFlow</div>
+                <div class="tech-item">PyTorch</div>
+                <div class="tech-item">MongoDB</div>
+                <div class="tech-item">PostgreSQL</div>
+                <div class="tech-item">AWS</div>
+                <div class="tech-item">Docker</div>
+                <div class="tech-item">Next.js</div>
+                <div class="tech-item">OpenAI</div>
+                <div class="tech-item">LangChain</div>
             </div>
-            <div class="footer-social">
-                <a href="https://github.com/luminexlabs" target="_blank" title="GitHub">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                </a>
-                <a href="https://twitter.com/luminexlabs" target="_blank" title="Twitter">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
-                </a>
-                <a href="https://linkedin.com/company/luminexlabs" target="_blank" title="LinkedIn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
-                </a>
-            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 class="section-title">Get In <span class="gradient-text">Touch</span></h2>
+            <form class="contact-form" id="contactForm">
+                <div class="form-group">
+                    <input type="text" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Your Email" required>
+                </div>
+                <div class="form-group">
+                    <textarea placeholder="Your Message" required></textarea>
+                </div>
+                <button type="submit" class="cta-button">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 LuminexLabs. All rights reserved. Building the future with AI and innovation.</p>
         </div>
     </footer>
-    
-    <!-- Scripts -->
-    <script src="js/main.js"></script>
-    <script src="js/visualizations.js"></script>
+
+    <script>
+        // Header scroll effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Particle animation
+        const particlesContainer = document.getElementById('particles');
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            particlesContainer.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 6000);
+        }
+
+        setInterval(createParticle, 300);
+
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            e.target.reset();
+        });
+
+        // Service card animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.service-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>
